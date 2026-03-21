@@ -63,7 +63,34 @@ if (isset($_POST['accion']) && $_POST['accion'] === 'registrarUsuario') {
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Error SQL: ' . $e->getMessage()]);
     }
+
+// =========================================================================
+// NUEVO BLOQUE: ELIMINAR USUARIO
+// =========================================================================
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'eliminarUsuario') {
+    
+    $id_usuario = $_POST['id_usuario'] ?? '';
+
+    try {
+        $sql = "DELETE FROM Usuario WHERE PK_id_usuario = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':id', $id_usuario);
+
+        if ($stmt->execute()) {
+            echo json_encode(['status' => 'success', 'message' => 'El usuario ha sido eliminado del sistema.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'No se pudo eliminar al usuario.']);
+        }
+    } catch (PDOException $e) {
+        // Protege contra borrado si el usuario ya tiene datos enlazados
+        echo json_encode(['status' => 'error', 'message' => 'Error de BD: El usuario tiene datos enlazados y no puede borrarse.']);
+    }
+
+// =========================================================================
+// ACCIÓN DESCONOCIDA
+// =========================================================================
 } else {
     echo json_encode(['status' => 'error', 'message' => 'No se recibió una acción válida desde el formulario.']);
 }
+
 ?>

@@ -105,3 +105,45 @@ function configurarFormularioUsuarios() {
         });
     });
 }
+
+// Función para eliminar un usuario con SweetAlert2
+function eliminarUsuario(id, nombre) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: `Estás a punto de eliminar permanentemente a ${nombre}. Esta acción no se puede deshacer.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545', // Rojo peligro
+        cancelButtonColor: '#6c757d', // Gris secundario
+        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario confirma, hacemos la petición a PHP
+            let datos = new FormData();
+            datos.append('accion', 'eliminarUsuario');
+            datos.append('id_usuario', id);
+
+            fetch('php/queries.php', {
+                method: 'POST',
+                body: datos
+            })
+            .then(respuesta => respuesta.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire('¡Eliminado!', data.message, 'success');
+                    // ============================================================
+                    // [CORRECCIÓN APLICADA]: Ruta completa para recargar la vista
+                    // ============================================================
+                    cargarVista('vistas/usuarios.php'); 
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error("Error en Fetch: ", error);
+                Swal.fire('Error', 'Hubo un problema de conexión con el servidor.', 'error');
+            });
+        }
+    });
+}
