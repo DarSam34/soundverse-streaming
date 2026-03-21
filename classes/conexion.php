@@ -1,14 +1,11 @@
 <?php
 /**
  * CLASE: Conexion
- * 
- * PROPÓSITO:
+ * * PROPÓSITO:
  * Establecer y gestionar la conexión a la base de datos MySQL usando PDO.
- * 
- * BASADO EN:
+ * * BASADO EN:
  * Clase del Lic. Obed Martínez [2026-02-11] y [2026-02-16]
- * 
- * REGLAS DE ORO APLICADAS:
+ * * REGLAS DE ORO APLICADAS:
  * 1. Atributos PRIVATE para encapsular credenciales
  * 2. Uso de PDO con sentencias preparadas
  * 3. DSN con charset=utf8mb4 (soporte tildes y eñes)
@@ -16,8 +13,7 @@
  * 5. Logs de error en archivo .txt (NO en BD)
  * 6. Método conectar() retorna el objeto PDO
  * 7. La destrucción de la conexión ($db = null) se hará en quien use esta clase
- * 
- * @author Equipo Proyecto 6 - Programación Avanzada
+ * * @author Equipo Proyecto 6 - Programación Avanzada
  * @version 1.0
  */
 
@@ -30,12 +26,9 @@ class Conexion {
     
     /**
      * MÉTODO: conectar()
-     * 
-     * Establece la conexión con la base de datos usando PDO.
-     * 
-     * @return PDO|null Retorna objeto PDO si éxito, null si error
-     * 
-     * @throws PDOException Se captura internamente y se registra en log
+     * * Establece la conexión con la base de datos usando PDO.
+     * * @return PDO|null Retorna objeto PDO si éxito, null si error
+     * * @throws PDOException Se captura internamente y se registra en log
      */
     public function conectar() {
         try {
@@ -50,6 +43,13 @@ class Conexion {
             
             // 3. Configurar PDO para que lance excepciones en errores
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            // =========================================================================
+            // [MODIFICACIÓN EQUIPO]: Configuración de Fetch Mode por defecto
+            // Esto permite que al hacer SELECT, los datos se manejen como arreglos asociativos.
+            // Es necesario para la integración con el módulo de administración.
+            // =========================================================================
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             
             // 4. Retornar el objeto de conexión
             return $pdo;

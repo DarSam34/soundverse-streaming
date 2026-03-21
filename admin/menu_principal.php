@@ -31,6 +31,8 @@ if (!isset($_SESSION['usuario_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soundverse - Panel de Administración</title>
     
+    <link rel="shortcut icon" href="../assets/img/logo_principal.png" type="image/x-icon">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -68,10 +70,6 @@ if (!isset($_SESSION['usuario_id'])) {
             border-bottom: 1px solid #343a40; 
             margin-bottom: 20px;
         }
-        .logo-container img { 
-            max-width: 120px; 
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -82,8 +80,14 @@ if (!isset($_SESSION['usuario_id'])) {
         <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
             
             <div class="logo-container">
-                <img src="../assets/img/logo_principal.png" alt="Soundverse Logo" class="img-fluid">
-                <h6 class="text-uppercase fw-bold text-light">Admin Panel</h6>
+                <img src="../assets/img/logo_principal.png" 
+                     alt="Soundverse Logo" 
+                     class="img-fluid px-3" 
+                     style="max-height: 80px; filter: drop-shadow(0px 0px 2px rgba(255,255,255,0.5));">
+                
+                <h6 class="text-uppercase fw-bold text-light mt-2" style="letter-spacing: 2px;">
+                    Soundverse <span class="text-primary">Admin</span>
+                </h6>
             </div>
             
             <div class="position-sticky">
@@ -136,6 +140,12 @@ if (!isset($_SESSION['usuario_id'])) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../js/funciones.js"></script>
+
+<script>
+    window.onload = function() {
+        cargarVista('vistas/dashboard.php');
+    };
+</script>
 
 </body>
 </html>

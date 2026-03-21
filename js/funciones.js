@@ -32,6 +32,14 @@ function cargarVista(urlVista) {
         .then(html => {
             // 4. Inyectar el HTML limpio en nuestro contenedor central
             contenedor.innerHTML = html;
+
+            // ============================================================
+            // [NUEVA MODIFICACIÓN]: ACTIVAR ESCUCHADORES DE FORMULARIOS
+            // Si la vista cargada es la de usuarios, activamos su lógica
+            // ============================================================
+            if (urlVista.includes('usuarios.php')) {
+                configurarFormularioUsuarios();
+            }
         })
         .catch(error => {
             // 5. Manejo de errores amigable usando SweetAlert2 (Requisito de la clase)
@@ -52,4 +60,48 @@ function cargarVista(urlVista) {
                 confirmButtonColor: '#0d6efd'
             });
         });
+}
+
+/**
+ * [NUEVA FUNCIÓN]: configurarFormularioUsuarios
+ * Captura los datos del formulario de usuarios y los envía a queries.php vía POST.
+ */
+function configurarFormularioUsuarios() {
+    const form = document.getElementById('formNuevoUsuario');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Evitar recarga de página
+
+        const datos = new FormData();
+        datos.append('accion', 'registrarUsuario');
+        datos.append('nombre', document.getElementById('nombre').value);
+        datos.append('email', document.getElementById('email').value);
+        datos.append('rol', document.getElementById('rol').value);
+        datos.append('password', document.getElementById('password').value);
+
+        fetch('php/queries.php', {
+            method: 'POST',
+            body: datos
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registro Exitoso!',
+                    text: data.message,
+                    confirmButtonColor: '#0d6efd'
+                });
+                form.reset(); // Limpiar campos
+                cargarVista('vistas/usuarios.php'); // Recargar la tabla para ver el nuevo registro
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire('Error Crítico', 'No se pudo procesar el registro.', 'error');
+        });
+    });
 }
