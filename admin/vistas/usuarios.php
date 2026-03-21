@@ -117,7 +117,9 @@ $lista_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             </td>
                                             <td class="text-center">
                                                 <button title="Editar" class="btn btn-outline-warning btn-sm me-1"><i class="fas fa-edit"></i></button>
-                                                <button title="Eliminar" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                                <button title="Eliminar" class="btn btn-outline-danger btn-sm" onclick="eliminarUsuario(<?php echo $user['PK_id_usuario']; ?>, '<?php echo htmlspecialchars($user['nombre_completo']); ?>')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
