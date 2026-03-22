@@ -65,7 +65,7 @@ if (isset($_POST['accion']) && $_POST['accion'] === 'registrarUsuario') {
     }
 
 // =========================================================================
-// NUEVO BLOQUE: ELIMINAR USUARIO
+// BLOQUE: ELIMINAR USUARIO
 // =========================================================================
 } elseif (isset($_POST['accion']) && $_POST['accion'] === 'eliminarUsuario') {
     
@@ -85,6 +85,96 @@ if (isset($_POST['accion']) && $_POST['accion'] === 'registrarUsuario') {
         // Protege contra borrado si el usuario ya tiene datos enlazados
         echo json_encode(['status' => 'error', 'message' => 'Error de BD: El usuario tiene datos enlazados y no puede borrarse.']);
     }
+
+// =========================================================================
+// [NUEVA MODIFICACIÓN]: INICIAR SESIÓN (LOGIN)
+// =========================================================================
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'iniciarSesion') {
+    
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    try {
+        // Buscamos si el correo existe en la base de datos
+        $sql = "SELECT PK_id_usuario, nombre_completo, clave_hash FROM Usuario WHERE correo = :email LIMIT 1";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        // Si encontramos el correo...
+        if ($stmt->rowCount() > 0) {
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Verificamos si la contraseña escrita coincide con la encriptada (Hash)
+            if (password_verify($password, $usuario['clave_hash'])) {
+                
+                // ¡Contraseña correcta! Creamos las variables de sesión
+                session_start();
+                $_SESSION['usuario_id'] = $usuario['PK_id_usuario'];
+                $_SESSION['nombre'] = $usuario['nombre_completo'];
+                
+                echo json_encode(['status' => 'success', 'message' => 'Acceso concedido.']);
+            } else {
+                // Contraseña mala
+                echo json_encode(['status' => 'error', 'message' => 'La contraseña es incorrecta.']);
+            }
+        } else {
+            // El correo no existe
+            echo json_encode(['status' => 'error', 'message' => 'Este correo no está registrado en el sistema.']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Error de conexión al verificar el usuario.']);
+    }
+
+// =========================================================================
+// BLOQUE: CATÁLOGO MUSICAL (CANCIONES)
+// =========================================================================
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'listar_canciones') {
+    require_once dirname(__DIR__, 2) . "/classes/Cancion.php";
+    $cancionObj = new Cancion();
+    echo json_encode($cancionObj->listarCanciones());
+
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'datos_selects_cancion') {
+    require_once dirname(__DIR__, 2) . "/classes/Cancion.php";
+    $cancionObj = new Cancion();
+    echo json_encode([
+        'albumes' => $cancionObj->listarAlbumes(),
+        'generos' => $cancionObj->listarGeneros()
+    ]);
+
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'guardar_cancion') {
+    require_once dirname(__DIR__, 2) . "/classes/Cancion.php";
+    $cancionObj = new Cancion();
+    
+    $id = $_POST['id_cancion'] ?? '';
+    $album = $_POST['album'] ?? '';
+    $genero = $_POST['genero'] ?? '';
+    $titulo = $_POST['titulo'] ?? '';
+    $duracion = $_POST['duracion_segundos'] ?? '';
+    $ruta = $_POST['ruta_archivo_audio'] ?? '';
+    $letra = $_POST['letra_sincronizada'] ?? '';
+
+    if (empty($id) || $id == '0') {
+        $res = $cancionObj->registrarCancion($album, $genero, $titulo, $duracion, $ruta, $letra);
+        echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'Canción registrada exitosamente.' : 'Error al registrar la canción en la BD.']);
+    } else {
+        $res = $cancionObj->actualizarCancion($id, $album, $genero, $titulo, $duracion, $ruta, $letra);
+        echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'Canción actualizada exitosamente.' : 'Error al actualizar la canción en la BD.']);
+    }
+
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'obtener_cancion') {
+    require_once dirname(__DIR__, 2) . "/classes/Cancion.php";
+    $cancionObj = new Cancion();
+    $id = $_POST['id'] ?? '';
+    echo json_encode($cancionObj->obtenerCancion($id));
+
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'eliminar_cancion') {
+    require_once dirname(__DIR__, 2) . "/classes/Cancion.php";
+    $cancionObj = new Cancion();
+    $id = $_POST['id'] ?? '';
+    $res = $cancionObj->eliminarCancion($id);
+    // Recuerda que aquí usamos borrado lógico
+    echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'La canción fue dada de baja (Borrado lógico).' : 'Error al eliminar la canción.']);
 
 // =========================================================================
 // ACCIÓN DESCONOCIDA

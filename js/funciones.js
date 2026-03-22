@@ -34,11 +34,16 @@ function cargarVista(urlVista) {
             contenedor.innerHTML = html;
 
             // ============================================================
-            // [NUEVA MODIFICACIÓN]: ACTIVAR ESCUCHADORES DE FORMULARIOS
-            // Si la vista cargada es la de usuarios, activamos su lógica
+            // ACTIVAR ESCUCHADORES DE FORMULARIOS SEGÚN LA VISTA
             // ============================================================
             if (urlVista.includes('usuarios.php')) {
                 configurarFormularioUsuarios();
+            } 
+            // [NUEVA MODIFICACIÓN]: Inicializar la vista del Catálogo Musical
+            else if (urlVista.includes('catalogo.php')) {
+                cargarSelectsCancion();
+                cargarTablaCanciones();
+                configurarFormularioCanciones();
             }
         })
         .catch(error => {
@@ -63,7 +68,7 @@ function cargarVista(urlVista) {
 }
 
 /**
- * [NUEVA FUNCIÓN]: configurarFormularioUsuarios
+ * Función: configurarFormularioUsuarios
  * Captura los datos del formulario de usuarios y los envía a queries.php vía POST.
  */
 function configurarFormularioUsuarios() {
@@ -132,9 +137,6 @@ function eliminarUsuario(id, nombre) {
             .then(data => {
                 if (data.status === 'success') {
                     Swal.fire('¡Eliminado!', data.message, 'success');
-                    // ============================================================
-                    // [CORRECCIÓN APLICADA]: Ruta completa para recargar la vista
-                    // ============================================================
                     cargarVista('vistas/usuarios.php'); 
                 } else {
                     Swal.fire('Error', data.message, 'error');
@@ -147,3 +149,155 @@ function eliminarUsuario(id, nombre) {
         }
     });
 }
+
+// =========================================================================
+// BLOQUE DE FUNCIONES: CATÁLOGO MUSICAL (CANCIONES)
+// =========================================================================
+
+function cargarSelectsCancion() {
+    let datos = new FormData();
+    datos.append('accion', 'datos_selects_cancion');
+
+    fetch('php/queries.php', { method: 'POST', body: datos })
+        .then(res => res.json())
+        .then(data => {
+            const selectAlbum = document.getElementById('album');
+            const selectGenero = document.getElementById('genero');
+            
+            // Limpiar opciones previas excepto la primera
+            selectAlbum.innerHTML = '<option value="">Seleccione...</option>';
+            selectGenero.innerHTML = '<option value="">Seleccione...</option>';
+
+            data.albumes.forEach(a => selectAlbum.innerHTML += `<option value="${a.PK_id_album}">${a.titulo}</option>`);
+            data.generos.forEach(g => selectGenero.innerHTML += `<option value="${g.PK_id_genero}">${g.nombre_genero}</option>`);
+        })
+        .catch(err => console.error('Error cargando selects:', err));
+}
+
+function cargarTablaCanciones() {
+    let datos = new FormData();
+    datos.append('accion', 'listar_canciones');
+
+    fetch('php/queries.php', { method: 'POST', body: datos })
+        .then(res => res.json())
+        .then(canciones => {
+            const tbody = document.getElementById('tbody-canciones');
+            let html = '';
+            canciones.forEach(c => {
+                html += `<tr>
+                    <td>${c.PK_id_cancion}</td>
+                    <td>${c.titulo}</td>
+                    <td>${c.artista}</td>
+                    <td>${c.album}</td>
+                    <td>${c.genero}</td>
+                    <td>${c.duracion_segundos}s</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editarCancion(${c.PK_id_cancion})"><i class="fas fa-edit"></i> Editar</button>
+                        <button class="btn btn-sm btn-danger ms-1" onclick="eliminarCancion(${c.PK_id_cancion})"><i class="fas fa-trash"></i> Eliminar</button>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        })
+        .catch(err => console.error('Error cargando tabla:', err));
+}
+
+function configurarFormularioCanciones() {
+    const form = document.getElementById('form-cancion');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Recoge todos los datos de los inputs automáticamente
+        const datos = new FormData(form);
+        // Aseguramos que la acción sea la correcta
+        datos.set('accion', 'guardar_cancion');
+
+        fetch('php/queries.php', { method: 'POST', body: datos })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire('¡Éxito!', data.message, 'success');
+                    limpiarFormCancion();
+                    cargarTablaCanciones();
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(err => {
+                console.error('Error guardando canción:', err);
+                Swal.fire('Error', 'Problema al comunicarse con el servidor.', 'error');
+            });
+    });
+}
+
+window.editarCancion = function(id) {
+    let datos = new FormData();
+    datos.append('accion', 'obtener_cancion');
+    datos.append('id', id);
+
+    fetch('php/queries.php', { method: 'POST', body: datos })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('id_cancion').value = data.PK_id_cancion;
+            document.getElementById('titulo').value = data.titulo;
+            document.getElementById('album').value = data.FK_id_album;
+            document.getElementById('genero').value = data.FK_id_genero;
+            document.getElementById('duracion_segundos').value = data.duracion_segundos;
+            document.getElementById('ruta_archivo_audio').value = data.ruta_archivo_audio;
+            document.getElementById('letra_sincronizada').value = data.letra_sincronizada;
+            
+            document.getElementById('titulo-form-cancion').innerText = 'Editar Canción';
+            const btn = document.getElementById('btn-submit-cancion');
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-warning');
+            btn.innerText = 'Actualizar';
+            
+            // Subir al inicio de la página para ver el formulario
+            window.scrollTo(0, 0);
+        })
+        .catch(err => console.error('Error obteniendo canción:', err));
+};
+
+window.eliminarCancion = function(id) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "La canción será enviada a la papelera (Borrado Lógico).",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let datos = new FormData();
+            datos.append('accion', 'eliminar_cancion');
+            datos.append('id', id);
+
+            fetch('php/queries.php', { method: 'POST', body: datos })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire('¡Eliminado!', data.message, 'success');
+                        cargarTablaCanciones();
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                    }
+                })
+                .catch(err => console.error('Error al eliminar:', err));
+        }
+    });
+};
+
+window.limpiarFormCancion = function() {
+    document.getElementById('form-cancion').reset();
+    document.getElementById('id_cancion').value = '0';
+    document.getElementById('titulo-form-cancion').innerText = 'Registrar Nueva Canción';
+    
+    const btn = document.getElementById('btn-submit-cancion');
+    btn.classList.remove('btn-warning');
+    btn.classList.add('btn-primary');
+    btn.innerText = 'Guardar';
+};
