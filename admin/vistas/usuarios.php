@@ -1,22 +1,15 @@
 <?php
-/**
- * ARCHIVO: admin/vistas/usuarios.php
- * AUTOR: Mario Roger Mejía Elvir - Equipo Proyecto 6
- * PROPÓSITO: 
- * Proporcionar la interfaz de mantenimiento para la gestión de usuarios.
- * Este archivo se carga dinámicamente en el 'contenedor-vistas' del menu_principal.php.
- */
+// Vista de gestion de usuarios
+// Se carga dinamicamente en el contenedor del menu_principal.php via AJAX
 
-// =========================================================================
-// [MODIFICACIÓN]: Conexión a BD y Consulta SQL
-// =========================================================================
+// Abrimos la BD para mostrar la lista de usuarios al cargar la vista
 $ruta_conexion = dirname(__DIR__, 2) . "/classes/Conexion.php";
 require_once $ruta_conexion;
 
 $database = new Conexion();
 $db = $database->conectar();
 
-// Traemos los usuarios unidos a su tipo de suscripción
+// Solo traemos los activos (estado_disponible = 1) con su tipo de plan
 $sql = "SELECT u.PK_id_usuario, u.nombre_completo, u.correo, t.nombre_plan 
         FROM Usuario u 
         INNER JOIN Tipo_Suscripcion t ON u.FK_id_tipo = t.PK_id_tipo
@@ -26,7 +19,6 @@ $sql = "SELECT u.PK_id_usuario, u.nombre_completo, u.correo, t.nombre_plan
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $lista_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// =========================================================================
 ?>
 
 <div class="container-fluid animate__animated animate__fadeIn">
@@ -95,9 +87,7 @@ $lista_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0 text-dark"><i class="fas fa-list me-2 text-success"></i> Lista de
                         Usuarios</h5>
-                    <span class="badge bg-secondary">Total:
-                        <?php echo count($lista_usuarios); ?>
-                    </span>
+                    <span class="badge bg-secondary">Total: <?php echo count($lista_usuarios); ?></span>
                 </div>
 
                 <div class="card-body">
@@ -116,23 +106,16 @@ $lista_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <?php if (count($lista_usuarios) > 0): ?>
                                     <?php foreach ($lista_usuarios as $user): ?>
                                         <tr>
-                                            <td>
-                                                <?php echo $user['PK_id_usuario']; ?>
-                                            </td>
-                                            <td><strong>
-                                                    <?php echo htmlspecialchars($user['nombre_completo']); ?>
-                                                </strong></td>
-                                            <td>
-                                                <?php echo htmlspecialchars($user['correo']); ?>
-                                            </td>
+                                            <td><?php echo $user['PK_id_usuario']; ?></td>
+                                            <td><strong><?php echo htmlspecialchars($user['nombre_completo']); ?></strong></td>
+                                            <td><?php echo htmlspecialchars($user['correo']); ?></td>
                                             <td>
                                                 <?php if ($user['nombre_plan'] == 'Premium'): ?>
-                                                    <span class="badge bg-warning text-dark"><i
-                                                            class="fas fa-star"></i>Premium</span>
+                                                    <span class="badge bg-warning text-dark"><i class="fas fa-star"></i>
+                                                        Premium</span>
                                                 <?php else: ?>
-                                                    <span class="badge bg-info text-dark">
-                                                        <?php echo htmlspecialchars($user['nombre_plan']); ?>
-                                                    </span>
+                                                    <span
+                                                        class="badge bg-info text-dark"><?php echo htmlspecialchars($user['nombre_plan']); ?></span>
                                                 <?php endif; ?>
                                             </td>
                                             <td class="text-center">

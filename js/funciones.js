@@ -1,15 +1,11 @@
-/**
- * ARCHIVO: funciones.js
- * AUTOR: Mario Roger Mejía Elvir - Equipo Proyecto 6
- * PROPÓSITO:
- * Motor principal para la navegación SPA (Single Page Application) usando Vanilla JavaScript (Fetch API).
- * Permite recargar solo el contenedor principal sin actualizar toda la página.
- */
+// funciones.js - Mario Mejia, Equipo Proyecto 6
+// Maneja toda la logica del frontend: cargar vistas, formularios, AJAX
+// Usamos Fetch API en lugar de jQuery para hacerlo en Vanilla JS como pidio el Lic.
 
 function cargarVista(urlVista) {
     const contenedor = document.getElementById('contenedor-vistas');
 
-    // Manejar el sombreado Morado en el menú (para que no quede azul Bootstrap)
+    // Marcar como activo el link del menu que corresponde a la vista cargada
     document.querySelectorAll('.sidebar .nav-link').forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('onclick')?.includes(urlVista)) {
@@ -60,10 +56,8 @@ function cargarVista(urlVista) {
         });
 }
 
-/**
- * Función: configurarFormularioUsuarios
- * Módulo de Usuarios (Nuevo o Actualizar)
- */
+// Funcion para el formulario de usuarios
+// Detecta si es modo edicion o registro segun si hay un id_usuario distinto de 0
 function configurarFormularioUsuarios() {
     const form = document.getElementById('formNuevoUsuario');
     if (!form) return;
@@ -75,7 +69,7 @@ function configurarFormularioUsuarios() {
         const esEditar = (id && parseInt(id) > 0);
         const password = document.getElementById('password').value;
 
-        // Validación frontend
+        // Antes de enviar validamos que la contrasena cumpla las reglas minimas
         if (!esEditar && password === '') {
             Swal.fire({ icon: 'warning', title: 'Campo requerido', text: 'Debes ingresar una contraseña para registrar un usuario.', confirmButtonColor: '#0d6efd' });
             return;
@@ -92,7 +86,7 @@ function configurarFormularioUsuarios() {
         datos.append('rol',        document.getElementById('rol').value);
         datos.append('password',   password);
 
-        // Notar que la operación CRUD la define 'caso' en el endpoint URL GET, no en FormData POST.
+        // El 'caso' va en la URL (GET) y los datos del form van en el body (POST)
         const casoRequerido = esEditar ? 'actualizarUsuario' : 'registrarUsuario';
 
         fetch(`php/queries.php?caso=${casoRequerido}`, { method: 'POST', body: datos })
@@ -184,10 +178,6 @@ window.eliminarUsuario = function(id, nombre) {
     });
 };
 
-
-// =========================================================================
-// MÓDULO CANCIONES
-// =========================================================================
 
 function cargarSelectsCancion() {
     fetch('php/queries.php?caso=datos_selects_cancion', { method: 'POST' })
@@ -327,10 +317,6 @@ window.limpiarFormCancion = function() {
         btn.innerText = 'Guardar';
     }
 };
-
-// =========================================================================
-// MÓDULO LOGIN
-// =========================================================================
 
 function configurarLogin() {
     const form = document.getElementById('formLogin');

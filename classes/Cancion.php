@@ -1,4 +1,7 @@
 <?php
+// Modelo para todo lo relacionado a canciones
+// Separo esto de queries.php para mantener la logica de BD en un solo lugar
+
 require_once __DIR__ . '/Conexion.php';
 
 class Cancion extends Conexion
@@ -10,7 +13,8 @@ class Cancion extends Conexion
         $this->db = (new Conexion())->conectar();
     }
 
-    // Listar canciones activas
+    // Traemos solo las canciones activas con el JOIN necesario
+    // para mostrar nombre del artista, album y genero en la tabla
     public function listarCanciones()
     {
         try {
@@ -30,7 +34,7 @@ class Cancion extends Conexion
         }
     }
 
-    // Listar álbumes y géneros para los <select> del formulario
+    // Estos dos metodos los usamos para llenar los <select> del formulario
     public function listarAlbumes()
     {
         $stmt = $this->db->prepare("SELECT PK_id_album, titulo FROM Album WHERE estado_disponible = 1");
@@ -45,7 +49,7 @@ class Cancion extends Conexion
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Crear canción
+    // Registrar cancion nueva
     public function registrarCancion($id_album, $id_genero, $titulo, $duracion, $ruta, $letra)
     {
         try {
@@ -59,7 +63,7 @@ class Cancion extends Conexion
         }
     }
 
-    // Obtener una canción para editar
+    // Buscar una cancion por ID para cargar sus datos en el formulario de edicion
     public function obtenerCancion($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM Cancion WHERE PK_id_cancion = ?");
@@ -67,7 +71,7 @@ class Cancion extends Conexion
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Actualizar canción
+    // Actualizar datos de la cancion
     public function actualizarCancion($id, $id_album, $id_genero, $titulo, $duracion, $ruta, $letra)
     {
         try {
@@ -82,7 +86,7 @@ class Cancion extends Conexion
         }
     }
 
-    // Borrado Lógico
+    // Borrado logico igual que en usuarios
     public function eliminarCancion($id)
     {
         try {

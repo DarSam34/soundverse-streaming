@@ -1,73 +1,45 @@
 <?php
-/**
- * CLASE: Conexion
- * * PROPÓSITO:
- * Establecer y gestionar la conexión a la base de datos MySQL usando PDO.
- * * BASADO EN:
- * Clase del Lic. Obed Martínez [2026-02-11] y [2026-02-16]
- * * REGLAS DE ORO APLICADAS:
- * 1. Atributos PRIVATE para encapsular credenciales
- * 2. Uso de PDO con sentencias preparadas
- * 3. DSN con charset=utf8mb4 (soporte tildes y eñes)
- * 4. Manejo de excepciones con try-catch
- * 5. Logs de error en archivo .txt (NO en BD)
- * 6. Método conectar() retorna el objeto PDO
- * 7. La destrucción de la conexión ($db = null) se hará en quien use esta clase
- * * @author Equipo Proyecto 6 - Programación Avanzada
- * @version 1.0
- */
+// Clase base para la conexion a la BD usando PDO
+// La usamos en todos los modelos del proyecto para no repetir el mismo codigo
 
-class Conexion {
-    // Atributos privados - Nadie fuera de la clase puede ver las credenciales
+class Conexion
+{
+    // Ponemos las credenciales como atributos privados para que nadie
+    // pueda acceder a ellas desde afuera de la clase
     private $host = "localhost";
-    private $user = "root";      // En producción, cambiar a usuario específico
-    private $pass = "";          // En producción, poner contraseña real
-    private $db   = "lp3_streaming_musica";
-    
-    /**
-     * MÉTODO: conectar()
-     * * Establece la conexión con la base de datos usando PDO.
-     * * @return PDO|null Retorna objeto PDO si éxito, null si error
-     * * @throws PDOException Se captura internamente y se registra en log
-     */
-    public function conectar() {
+    private $user = "root";
+    private $pass = "";
+    private $db = "lp3_streaming_musica";
+
+    // El metodo conectar() devuelve el objeto PDO listo para hacer consultas
+    // Si falla, guarda el error en el log y devuelve null
+    public function conectar()
+    {
         try {
-            // 1. Construir el DSN (Data Source Name)
-            // Importante: incluir charset=utf8mb4 para caracteres especiales
-            $dsn = "mysql:host=" . $this->host . 
-                   ";dbname=" . $this->db . 
-                   ";charset=utf8mb4";
-            
-            // 2. Crear instancia de PDO
+            // El DSN lleva el charset utf8mb4 para que no se rompan las tildes
+            $dsn = "mysql:host=" . $this->host .
+                ";dbname=" . $this->db .
+                ";charset=utf8mb4";
+
             $pdo = new PDO($dsn, $this->user, $this->pass);
-            
-            // 3. Configurar PDO para que lance excepciones en errores
+
+            // Hacemos que PDO lance excepciones cuando hay un error SQL
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-            // =========================================================================
-            // [MODIFICACIÓN EQUIPO]: Configuración de Fetch Mode por defecto
-            // Esto permite que al hacer SELECT, los datos se manejen como arreglos asociativos.
-            // Es necesario para la integración con el módulo de administración.
-            // =========================================================================
+
+            // Esto hace que los fetch() devuelvan arrays asociativos por defecto
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            
-            // 4. Retornar el objeto de conexión
+
             return $pdo;
-            
+
         } catch (PDOException $e) {
-            // 5. Registrar el error en archivo de log
-            // Usando __DIR__ para obtener ruta absoluta
             $log_file = __DIR__ . "/../logs/errores.log";
-            
-            // Formato: [fecha] Error: mensaje
-            $mensaje = "[" . date('Y-m-d H:i:s') . "] Error de conexión: " . 
-                       $e->getMessage() . " en " . $e->getFile() . 
-                       " línea " . $e->getLine() . PHP_EOL;
-            
-            // Escribir en archivo (3 = FILE_APPEND)
+
+            $mensaje = "[" . date('Y-m-d H:i:s') . "] Error de conexion: " .
+                $e->getMessage() . " en " . $e->getFile() .
+                " linea " . $e->getLine() . PHP_EOL;
+
             file_put_contents($log_file, $mensaje, FILE_APPEND);
-            
-            // 6. Retornar null para indicar que no hay conexión
+
             return null;
         }
     }
