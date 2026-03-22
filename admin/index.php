@@ -18,8 +18,24 @@ if (isset($_SESSION['usuario_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        :root {
+            --bs-primary: #6B46C1;
+            --bs-primary-rgb: 107, 70, 193;
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #55359e;
+            border-color: #55359e;
+        }
+
         body {
-            background-color: #f8f9fa;
+            background-color: #2D3748;
+            /* Gris oscuro oficial */
             height: 100vh;
             display: flex;
             align-items: center;
@@ -28,12 +44,13 @@ if (isset($_SESSION['usuario_id'])) {
 
         .login-card {
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             overflow: hidden;
         }
 
         .login-header {
-            background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+            background: linear-gradient(135deg, #6B46C1, #9F7AEA);
+            /* Degradado morado oficial */
             padding: 30px;
             text-align: center;
             color: white;
@@ -84,7 +101,7 @@ if (isset($_SESSION['usuario_id'])) {
         </div>
     </div>
 
-    <script src="../js/funciones.js?v=1.1"></script>
+    <script src="../js/funciones.js?v=1.2"></script>
     <script>
         configurarLogin();
     </script>

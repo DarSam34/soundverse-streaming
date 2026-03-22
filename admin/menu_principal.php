@@ -46,6 +46,33 @@ $_SESSION['time'] = time(); // Actualiza el tiempo en cada carga de página
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        :root {
+            --bs-primary: #6B46C1;
+            --bs-primary-rgb: 107, 70, 193;
+            --bs-warning: #FBBF24;
+            --bs-warning-rgb: 251, 191, 36;
+            --bs-info: #9F7AEA;
+        }
+
+        /* Sobremarcha de Bootstrap */
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #55359e;
+            border-color: #55359e;
+        }
+
+        .bg-primary {
+            background-color: var(--bs-primary) !important;
+        }
+
+        .text-primary {
+            color: var(--bs-primary) !important;
+        }
+
         body {
             min-height: 100vh;
             display: flex;
@@ -57,34 +84,45 @@ $_SESSION['time'] = time(); // Actualiza el tiempo en cada carga de página
         /* Estilos del Menú Lateral (Sidebar) */
         .sidebar {
             min-height: 100vh;
-            background-color: #1a1e21;
-            /* Gris oscuro elegante para Soundverse */
+            background-color: #2D3748;
+            /* Gris oscuro oficial */
             color: white;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
 
-        .sidebar a {
-            color: #adb5bd;
+        .sidebar .nav-link {
+            color: #adb5bd !important;
             text-decoration: none;
             padding: 12px 20px;
             display: block;
             transition: 0.3s;
             font-weight: 500;
+            border-left: 4px solid transparent;
         }
 
-        .sidebar a:hover,
-        .sidebar a.active {
-            color: #fff;
-            background-color: #0d6efd;
-            /* Azul de selección */
-            border-left: 4px solid #fff;
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link:focus {
+            color: #fff !important;
+            background-color: #4B318B !important;
+            /* Morado 20% más oscuro para hover */
+            border-left: 4px solid transparent;
+            outline: none;
+        }
+
+        .sidebar .nav-link.active {
+            color: #fff !important;
+            background-color: #6B46C1 !important;
+            /* Morado de selección Oficial */
+            border-left: 4px solid #FBBF24 !important;
+            /* Acento amarillo */
+            outline: none;
         }
 
         /* Contenedor de la línea gráfica */
         .logo-container {
             padding: 20px;
             text-align: center;
-            border-bottom: 1px solid #343a40;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 20px;
         }
     </style>
@@ -156,7 +194,7 @@ $_SESSION['time'] = time(); // Actualiza el tiempo en cada carga de página
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../js/funciones.js?v=1.1"></script>
+    <script src="../js/funciones.js?v=1.2"></script>
 
     <script>
         window.onload = function () {

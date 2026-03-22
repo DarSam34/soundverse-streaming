@@ -8,6 +8,14 @@
 
 function cargarVista(urlVista) {
     const contenedor = document.getElementById('contenedor-vistas');
+
+    // Manejar el sombreado Morado en el menú (para que no quede azul Bootstrap)
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('onclick')?.includes(urlVista)) {
+            link.classList.add('active');
+        }
+    });
     
     // Spinner de carga mientras responde el servidor
     contenedor.innerHTML = `
