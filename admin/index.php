@@ -70,7 +70,7 @@ if (isset($_SESSION['usuario_id'])) {
                         <p class="text-white-50 mb-0">Panel de Administración</p>
                     </div>
                     <div class="card-body p-4">
-                        <form id="formLogin">
+                        <form id="form-login" method="POST">
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-secondary">Correo Electrónico</label>
                                 <div class="input-group">

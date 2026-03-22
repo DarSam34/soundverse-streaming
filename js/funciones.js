@@ -333,7 +333,7 @@ window.limpiarFormCancion = function() {
 // =========================================================================
 
 function configurarLogin() {
-    const form = document.getElementById('formLogin');
+    const form = document.getElementById('form-login');
     if (!form) return;
 
     form.addEventListener('submit', function(e) {

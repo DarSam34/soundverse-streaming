@@ -110,7 +110,7 @@ $lista_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaUsuariosBody">
+                            <tbody id="tabla-usuarios">
                                 <?php if (count($lista_usuarios) > 0): ?>
                                     <?php foreach ($lista_usuarios as $user): ?>
                                         <tr>
