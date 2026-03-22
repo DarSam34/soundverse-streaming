@@ -144,7 +144,9 @@ function registrarUsuario()
     if ($usuarioObj->verificarCorreoExistente($email)) {
         echo json_encode(['status' => 'error', 'message' => 'Este correo ya está registrado en el sistema.']);
     } else {
-        $resultado = $usuarioObj->guardarUsuario($id_tipo, $nombre, $email, $pass);
+        // Se crea nueva instancia porque verificarCorreoExistente() cerró la conexión PDO en su finally()
+        $usuarioObj2 = new Usuario();
+        $resultado = $usuarioObj2->guardarUsuario($id_tipo, $nombre, $email, $pass);
         if ($resultado) {
             echo json_encode(['status' => 'success', 'message' => '¡Éxito! El usuario se registró correctamente en Soundverse.']);
         } else {
