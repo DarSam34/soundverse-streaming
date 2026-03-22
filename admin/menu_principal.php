@@ -113,7 +113,7 @@ if (!isset($_SESSION['usuario_id'])) {
                 
                 <ul class="nav flex-column mb-2">
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="php/logout.php">
+                        <a class="nav-link text-danger" href="logout.php">
                             <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
                         </a>
                     </li>
