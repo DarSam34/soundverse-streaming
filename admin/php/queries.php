@@ -1,9 +1,10 @@
 <?php
-// Controlador central de peticiones AJAX
-// Todas las peticiones del frontend llegan aqui y se enrutan segun $_GET['caso']
-// El Lic. pidio que usaramos switch() con GET en vez de if/else con POST
+/**
+ * ARCHIVO: admin/php/queries.php
+ * PROPÓSITO: Controlador único central para las peticiones AJAX manejadas por un switch() sobre $_GET['caso'].
+ */
 
-// Iniciamos sesion y le decimos al navegador que esperamos JSON de respuesta
+// Iniciar sesión y preparativos
 session_start();
 header('Content-Type: application/json');
 error_reporting(E_ALL);
@@ -30,15 +31,17 @@ if (!$db) {
     exit;
 }
 
-// Leemos el caso que manda el JS desde la URL (?caso=...)
+// CAPTURAR EL CASO ENVIADO POR LA URL
 $caso = $_GET['caso'] ?? '';
 
+// SWITCH PRINCIPAL REQUERIDO POR EL LIC. OBED
 switch ($caso) {
+    // CASOS NO PROTEGIDOS
     case 'iniciarSesion':
         iniciarSesion();
         break;
 
-    // Los siguientes casos requieren sesion activa
+    // CASOS PROTEGIDOS (REQUiEREN SESIÓN ACTIVA)
     case 'registrarUsuario':
         verificarSesionAjax();
         registrarUsuario();
@@ -85,15 +88,18 @@ switch ($caso) {
         break;
 
     default:
-        echo json_encode(['status' => 'error', 'message' => 'Caso no valido o vacio procesado por el controlador.']);
+        echo json_encode(['status' => 'error', 'message' => 'Caso no válido o vacío procesado por el controlador.']);
         break;
 }
 
-// Verifica que haya sesion activa antes de ejecutar cualquier caso protegido
+// =========================================================================
+// DEFINICIÓN DE FUNCIONES PARA EL CONTROLADOR
+// =========================================================================
+
 function verificarSesionAjax()
 {
     if (!isset($_SESSION['usuario_id'])) {
-        echo json_encode(['status' => 'error', 'message' => 'Sesion no valida o expirada.']);
+        echo json_encode(['status' => 'error', 'message' => 'Sesión no válida o expirada.']);
         exit();
     }
 }
@@ -107,7 +113,7 @@ function iniciarSesion()
     $usuario = $usuarioObj->login($email, $password);
 
     if ($usuario !== false) {
-        // Regeneramos el ID de sesion por seguridad antes de guardar los datos
+        // Renovar y limpiar sesión previe
         session_regenerate_id(true);
 
         $_SESSION['usuario_id'] = $usuario['PK_id_usuario'];
@@ -116,7 +122,7 @@ function iniciarSesion()
 
         echo json_encode(['status' => 'success', 'message' => 'Acceso concedido. Redirigiendo...']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Correo o contrasena incorrectos.']);
+        echo json_encode(['status' => 'error', 'message' => 'Correo o contraseña incorrectos.']);
     }
 }
 
@@ -125,24 +131,24 @@ function registrarUsuario()
     $nombre = trim($_POST['nombre'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $pass = $_POST['password'] ?? '';
-    // Si viene '2' es Premium, de lo contrario se asigna Free
+    // Rol: si viene '2' es Premium, sino '1' (Free)
     $id_tipo = (isset($_POST['rol']) && $_POST['rol'] == 2) ? 2 : 1;
 
     if (strlen($pass) < 8) {
-        echo json_encode(['status' => 'error', 'message' => 'La contrasena debe tener al menos 8 caracteres por seguridad.']);
+        echo json_encode(['status' => 'error', 'message' => 'La contraseña debe tener al menos 8 caracteres por seguridad.']);
         exit;
     }
 
     $usuarioObj = new Usuario();
 
     if ($usuarioObj->verificarCorreoExistente($email)) {
-        echo json_encode(['status' => 'error', 'message' => 'Este correo ya esta registrado en el sistema.']);
+        echo json_encode(['status' => 'error', 'message' => 'Este correo ya está registrado en el sistema.']);
     } else {
-        // Se necesita nueva instancia porque verificarCorreoExistente() cierra la conexion PDO en su finally()
+        // Se crea nueva instancia porque verificarCorreoExistente() cerró la conexión PDO en su finally()
         $usuarioObj2 = new Usuario();
         $resultado = $usuarioObj2->guardarUsuario($id_tipo, $nombre, $email, $pass);
         if ($resultado) {
-            echo json_encode(['status' => 'success', 'message' => 'El usuario se registro correctamente en Soundverse.']);
+            echo json_encode(['status' => 'success', 'message' => '¡Éxito! El usuario se registró correctamente en Soundverse.']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Error de BD interno al intentar guardar el usuario.']);
         }
@@ -158,15 +164,15 @@ function actualizarUsuario()
     $id_tipo = (isset($_POST['rol']) && $_POST['rol'] == 2) ? 2 : 1;
 
     if (!empty($pass) && strlen($pass) < 8) {
-        echo json_encode(['status' => 'error', 'message' => 'La nueva contrasena debe tener al menos 8 caracteres.']);
+        echo json_encode(['status' => 'error', 'message' => 'La nueva contraseña debe tener al menos 8 caracteres.']);
         exit;
     }
 
     $usuarioObj = new Usuario();
-    // Si $pass viene vacio, actualizarUsuario no toca el hash de la clave
+    // NOTA: if $pass is empty, actualizarUsuario doesn't update the password hash
     $resultado = $usuarioObj->actualizarUsuario($id_usuario, $id_tipo, $nombre, $email, $pass);
 
-    if ($resultado !== false) {
+    if ($resultado !== false) { // PDO might return 0 modified rows if data didn't change, which is still a success
         echo json_encode(['status' => 'success', 'message' => 'Usuario actualizado correctamente.']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Error al actualizar el usuario. Verifique el log de errores.']);
@@ -180,7 +186,7 @@ function eliminarUsuario()
     $resultado = $usuarioObj->eliminarUsuarioLogico($id_usuario);
 
     if ($resultado) {
-        echo json_encode(['status' => 'success', 'message' => 'El usuario fue dado de baja del sistema (Borrado logico).']);
+        echo json_encode(['status' => 'success', 'message' => 'El usuario fue dado de baja del sistema (Borrado lógico).']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No se pudo dar de baja al usuario. Posiblemente no existe.']);
     }
@@ -188,11 +194,12 @@ function eliminarUsuario()
 
 function listarUsuarios()
 {
+    // Si la vista ya hiciera una carga directa en PHP, esto sería innecesario, pero lo dejamos por si piden una grilla AJAX.
     $usuarioObj = new Usuario();
     echo json_encode($usuarioObj->listarUsuarios());
 }
 
-// Modulo de Canciones
+// ========================== MÓDULO CANCIONES ==========================
 
 function listarCanciones()
 {
@@ -222,10 +229,10 @@ function guardarCancion()
 
     if (empty($id) || $id == '0') {
         $res = $cancionObj->registrarCancion($album, $genero, $titulo, $duracion, $ruta, $letra);
-        echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'Cancion registrada exitosamente.' : 'Error al registrar la cancion en la BD.']);
+        echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'Canción registrada exitosamente.' : 'Error al registrar la canción en la BD.']);
     } else {
         $res = $cancionObj->actualizarCancion($id, $album, $genero, $titulo, $duracion, $ruta, $letra);
-        echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'Cancion actualizada exitosamente.' : 'Error al actualizar la cancion.']);
+        echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'Canción actualizada exitosamente.' : 'Error al actualizar la canción.']);
     }
 }
 
@@ -241,6 +248,6 @@ function eliminarCancion()
     $cancionObj = new Cancion();
     $id = $_POST['id'] ?? '';
     $res = $cancionObj->eliminarCancion($id);
-    echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'La cancion fue dada de baja (Borrado logico).' : 'Error al eliminar la cancion.']);
+    echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'La canción fue dada de baja (Borrado lógico).' : 'Error al eliminar la canción.']);
 }
 ?>

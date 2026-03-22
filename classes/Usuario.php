@@ -1,29 +1,71 @@
 <?php
-require_once __DIR__ . '/Conexion.php';
-
-/*
- * Archivo: Usuario.php
- * Aqui van todos los metodos relacionados a usuarios.
- * El objetivo es separar el SQL de queries.php para que no se mezcle
- * todo en un solo archivo, que fue lo que nos explico el Lic. Obed con POO.
+/**
+ * CLASE: Usuario
+ *
+ * PROPÓSITO:
+ * Gestionar todas las operaciones de base de datos relacionadas con los
+ * usuarios de la plataforma Soundverse (login, registro, borrado lógico).
+ *
+ * PATRÓN: MVC - Capa Modelo
+ *
+ * REGLAS DE ORO APLICADAS:
+ * 1. El constructor instancia la conexión PDO a través de la clase Conexion.
+ * 2. Método privado logError() registra excepciones en logs/errores.log.
+ * 3. Todas las consultas usan try-catch capturando PDOException.
+ * 4. Borrado LÓGICO (UPDATE estado_disponible = 0) — DELETE está prohibido.
+ * 5. La conexión se destruye al final de cada método público ($this->db = null).
+ *
+ * @author Equipo Proyecto 6 - Programación Avanzada
+ * @version 1.0
  */
+
+require_once __DIR__ . '/Conexion.php';
 
 class Usuario
 {
+
+    /** @var PDO|null Objeto de conexión a la base de datos */
     private $db;
 
+    // =========================================================================
+    // CONSTRUCTOR
+    // =========================================================================
+
+    /**
+     * Establece la conexión a la base de datos al instanciar la clase.
+     */
     public function __construct()
     {
         $this->db = (new Conexion())->conectar();
     }
 
-    public function cerrarConexion()
+    // =========================================================================
+    // MÉTODO PRIVADO: logError
+    // =========================================================================
+
+    /**
+     * Registra un mensaje de error en el archivo de log del sistema.
+     * Los errores NO se muestran al usuario, solo se guardan en el archivo.
+     *
+     * @param string $mensaje Descripción del error a registrar.
+     */
+    private function logError($mensaje)
     {
-        $this->db = null;
+        $log_file = __DIR__ . '/../logs/errores.log';
+        $entrada = '[' . date('Y-m-d H:i:s') . '] [Usuario] ' . $mensaje . PHP_EOL;
+        file_put_contents($log_file, $entrada, FILE_APPEND);
     }
 
-    // Antes de insertar un usuario revisamos si el correo ya existe
-    // para evitar duplicados en la tabla
+    // =========================================================================
+    // MÉTODO PÚBLICO: verificarCorreoExistente
+    // =========================================================================
+
+    /**
+     * Comprueba si un correo electrónico ya está registrado en la BD.
+     *
+     * @param  string $email Correo a verificar.
+     * @return bool   true si el correo ya existe, false si está disponible.
+     */
     public function verificarCorreoExistente($email)
     {
         try {
@@ -43,11 +85,24 @@ class Usuario
         }
     }
 
-    // Registrar usuario nuevo. La contrasena se hashea aqui
-    // porque el controlador no deberia saber nada de eso (encapsulamiento)
+    // =========================================================================
+    // MÉTODO PÚBLICO: guardarUsuario
+    // =========================================================================
+
+    /**
+     * Registra un nuevo usuario en la BD con la contraseña encriptada.
+     * La encriptación se realiza AQUÍ dentro del modelo, no en el controlador.
+     *
+     * @param  int    $id_tipo  ID del tipo de suscripción (1=Free, 2=Premium).
+     * @param  string $nombre   Nombre completo del usuario.
+     * @param  string $email    Correo electrónico único.
+     * @param  string $password Contraseña en texto plano (se encripta con BCRYPT).
+     * @return bool   true si el INSERT fue exitoso, false si falló.
+     */
     public function guardarUsuario($id_tipo, $nombre, $email, $password)
     {
         try {
+            // La responsabilidad del hash es del modelo, no del controlador
             $clave_hash = password_hash($password, PASSWORD_BCRYPT);
 
             $sql = "INSERT INTO Usuario (FK_id_tipo, nombre_completo, correo, clave_hash)
@@ -70,8 +125,19 @@ class Usuario
         }
     }
 
-    // En vez de hacer DELETE lo que hacemos es poner estado_disponible = 0
-    // asi el registro sigue en la BD pero ya no aparece en las consultas normales
+    // =========================================================================
+    // MÉTODO PÚBLICO: eliminarUsuarioLogico
+    // =========================================================================
+
+    /**
+     * Desactiva un usuario cambiando su campo estado_disponible a 0.
+     *
+     * REGLA ESTRICTA: Está PROHIBIDO usar DELETE.
+     * Los registros nunca se borran físicamente de la base de datos.
+     *
+     * @param  int  $id_usuario ID del usuario a desactivar.
+     * @return bool true si se actualizó al menos una fila, false si falló.
+     */
     public function eliminarUsuarioLogico($id_usuario)
     {
         try {
@@ -79,6 +145,8 @@ class Usuario
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
             $stmt->execute();
+
+            // Validación explícita: debe haber afectado al menos 1 fila
             return $stmt->rowCount() > 0;
 
         } catch (PDOException $e) {
@@ -89,8 +157,20 @@ class Usuario
         }
     }
 
-    // Login: buscamos el correo en la BD y con password_verify
-    // comparamos lo que escribio el usuario con el hash guardado
+    // =========================================================================
+    // MÉTODO PÚBLICO: login
+    // =========================================================================
+
+    /**
+     * Valida las credenciales del usuario contra la base de datos.
+     * Usa password_verify() para comparar contra el hash almacenado.
+     * Solo permite el acceso a usuarios con estado_disponible = 1 (activos).
+     *
+     * @param  string       $email    Correo del usuario.
+     * @param  string       $password Contraseña en texto plano.
+     * @return array|false  Arreglo asociativo con los datos del usuario si las
+     *                      credenciales son correctas, false si fallan.
+     */
     public function login($email, $password)
     {
         try {
@@ -105,12 +185,13 @@ class Usuario
             if ($stmt->rowCount() > 0) {
                 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
+                // Comparar contraseña digitada con el hash de la BD
                 if (password_verify($password, $usuario['clave_hash'])) {
-                    return $usuario;
+                    return $usuario; // Credenciales correctas: retorna datos del usuario
                 }
             }
 
-            return false;
+            return false; // Correo no existe o contraseña incorrecta
 
         } catch (PDOException $e) {
             $this->logError('login(): ' . $e->getMessage());
@@ -120,11 +201,20 @@ class Usuario
         }
     }
 
-    // Trae todos los usuarios activos junto con su tipo de plan
-    // para mostrarlos en la tabla del panel de administracion
+    // =========================================================================
+    // MÉTODO PÚBLICO: listarUsuarios
+    // =========================================================================
+
+    /**
+     * Retorna todos los usuarios activos con su tipo de suscripción.
+     * Se usa para recargar la tabla vía AJAX después de crear/editar/eliminar.
+     *
+     * @return array Arreglo de usuarios activos, o arreglo vacío si hay error.
+     */
     public function listarUsuarios()
     {
         try {
+            // JOIN con Tipo_Suscripcion para mostrar 'Free' o 'Premium' (columna: nombre_plan)
             $sql = "SELECT u.PK_id_usuario, u.nombre_completo, u.correo,
                             u.FK_id_tipo, t.nombre_plan
                      FROM Usuario u
@@ -143,26 +233,49 @@ class Usuario
         }
     }
 
-    // Actualizar datos del usuario. Si no mandan nueva contrasena
-    // simplemente no se incluye en el UPDATE para no pisar la anterior
-    public function actualizarUsuario($id_usuario, $id_tipo, $nombre, $email, $pass = '')
+    // =========================================================================
+    // MÉTODO PÚBLICO: actualizarUsuario
+    // =========================================================================
+
+    /**
+     * Actualiza los datos de un usuario existente.
+     * Si el password viene vacío, NO se modifica la clave actual (por seguridad).
+     *
+     * @param  int    $id_usuario ID del usuario a modificar.
+     * @param  int    $id_tipo    Nuevo tipo de suscripción (1=Free, 2=Premium).
+     * @param  string $nombre     Nuevo nombre completo.
+     * @param  string $email      Nuevo correo electrónico.
+     * @param  string $password   Nueva contraseña (vacío = no cambiar).
+     * @return bool   true si la operación fue exitosa, false si falló.
+     */
+    public function actualizarUsuario($id_usuario, $id_tipo, $nombre, $email, $password)
     {
         try {
-            $sql = "UPDATE Usuario SET FK_id_tipo = ?, nombre_completo = ?, correo = ?";
-            $params = [$id_tipo, $nombre, $email];
-
-            if (!empty($pass)) {
-                $clave_hash = password_hash($pass, PASSWORD_DEFAULT);
-                $sql .= ", clave_hash = ?";
-                $params[] = $clave_hash;
+            if (empty($password)) {
+                // No se toca la contraseña si el campo llega vacío
+                $sql = "UPDATE Usuario
+                         SET FK_id_tipo = :tipo, nombre_completo = :nombre, correo = :email
+                         WHERE PK_id_usuario = :id";
+                $stmt = $this->db->prepare($sql);
+            } else {
+                // Se actualiza también la clave con nuevo hash BCRYPT
+                $sql = "UPDATE Usuario
+                         SET FK_id_tipo = :tipo, nombre_completo = :nombre,
+                             correo = :email, clave_hash = :hash
+                         WHERE PK_id_usuario = :id";
+                $stmt = $this->db->prepare($sql);
+                $hash = password_hash($password, PASSWORD_BCRYPT);
+                $stmt->bindParam(':hash', $hash);
             }
 
-            $sql .= " WHERE PK_id_usuario = ?";
-            $params[] = $id_usuario;
+            $stmt->bindParam(':tipo', $id_tipo, PDO::PARAM_INT);
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':id', $id_usuario, PDO::PARAM_INT);
+            $stmt->execute();
 
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute($params);
-            return $stmt->rowCount();
+            // >= 0: si los datos son idénticos MySQL devuelve rowCount 0 pero la operación es válida
+            return $stmt->rowCount() >= 0;
 
         } catch (PDOException $e) {
             $this->logError('actualizarUsuario(): ' . $e->getMessage());
@@ -170,15 +283,6 @@ class Usuario
         } finally {
             $this->db = null;
         }
-    }
-
-    // El Lic. dijo que jamas hay que mostrar el error de BD al usuario final
-    // por eso lo guardamos en un archivo de log
-    private function logError($mensaje)
-    {
-        $ruta = __DIR__ . '/../logs/errores.log';
-        $linea = '[' . date('Y-m-d H:i:s') . '] ' . $mensaje . PHP_EOL;
-        file_put_contents($ruta, $linea, FILE_APPEND);
     }
 }
 ?>

@@ -12,7 +12,9 @@
  * 3. Preparación de validación de sesión para seguridad.
  */
 
+// =========================================================================
 // BLOQUE DE SEGURIDAD
+// =========================================================================
 session_start();
 
 // Si no hay una sesión activa, expulsar al index (Login)
@@ -52,7 +54,7 @@ $_SESSION['time'] = time(); // Actualiza el tiempo en cada carga de página
             --bs-info: #9F7AEA;
         }
 
-        
+        /* Sobremarcha de Bootstrap */
         .btn-primary {
             background-color: var(--bs-primary);
             border-color: var(--bs-primary);
@@ -76,14 +78,14 @@ $_SESSION['time'] = time(); // Actualiza el tiempo en cada carga de página
             display: flex;
             flex-direction: column;
             background-color: #f4f6f9;
-            
+            /* Tono suave para la vista central */
         }
 
         /* Estilos del Menú Lateral (Sidebar) */
         .sidebar {
             min-height: 100vh;
             background-color: #2D3748;
-            
+            /* Gris oscuro oficial */
             color: white;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
@@ -110,9 +112,9 @@ $_SESSION['time'] = time(); // Actualiza el tiempo en cada carga de página
         .sidebar .nav-link.active {
             color: #fff !important;
             background-color: #6B46C1 !important;
-            
+            /* Morado de selección Oficial */
             border-left: 4px solid #FBBF24 !important;
-            
+            /* Acento amarillo */
             outline: none;
         }
 

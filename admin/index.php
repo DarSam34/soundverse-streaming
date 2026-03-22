@@ -35,7 +35,7 @@ if (isset($_SESSION['usuario_id'])) {
 
         body {
             background-color: #2D3748;
-            
+            /* Gris oscuro oficial */
             height: 100vh;
             display: flex;
             align-items: center;
@@ -50,7 +50,7 @@ if (isset($_SESSION['usuario_id'])) {
 
         .login-header {
             background: linear-gradient(135deg, #6B46C1, #9F7AEA);
-            
+            /* Degradado morado oficial */
             padding: 30px;
             text-align: center;
             color: white;
