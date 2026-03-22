@@ -1,32 +1,32 @@
 <?php
 // Clase base para la conexion a la BD usando PDO
-// La usamos en todos los modelos del proyecto para no repetir el mismo codigo
+// Basada en los apuntes del Lic. Obed del 11 y 16 de febrero
+// La usamos en todos los modelos para no repetir la logica de conexion
 
 class Conexion
 {
-    // Ponemos las credenciales como atributos privados para que nadie
-    // pueda acceder a ellas desde afuera de la clase
+    // Credenciales privadas para que nadie pueda acceder a ellas desde afuera
     private $host = "localhost";
     private $user = "root";
     private $pass = "";
     private $db = "lp3_streaming_musica";
 
-    // El metodo conectar() devuelve el objeto PDO listo para hacer consultas
+    // conectar() devuelve el objeto PDO listo para hacer consultas
     // Si falla, guarda el error en el log y devuelve null
     public function conectar()
     {
         try {
-            // El DSN lleva el charset utf8mb4 para que no se rompan las tildes
+            // El DSN lleva charset=utf8mb4 para que no se rompan las tildes y simbolos
             $dsn = "mysql:host=" . $this->host .
                 ";dbname=" . $this->db .
                 ";charset=utf8mb4";
 
             $pdo = new PDO($dsn, $this->user, $this->pass);
 
-            // Hacemos que PDO lance excepciones cuando hay un error SQL
+            // Que PDO lance excepciones cuando hay un error SQL
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            // Esto hace que los fetch() devuelvan arrays asociativos por defecto
+            // Asi los fetch() devuelven arrays asociativos por defecto sin tener que pedirlo cada vez
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
             return $pdo;
