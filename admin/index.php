@@ -36,6 +36,13 @@ if (isset($_SESSION['usuario_id'])) {
         body {
             background-color: #2D3748;
             /* Gris oscuro oficial */
+            margin: 0;
+        }
+
+        /* Wrapper de centrado independiente del body.
+           Al separarlo del body, SweetAlert2 no puede romper
+           el centrado sin importar qué clases le inyecte al body. */
+        .page-center {
             height: 100vh;
             display: flex;
             align-items: center;
@@ -60,41 +67,43 @@ if (isset($_SESSION['usuario_id'])) {
 
 <body>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="card login-card border-0">
-                    <div class="login-header">
-                        <i class="fas fa-compact-disc fa-3x mb-2 fa-spin" style="animation-duration: 3s;"></i>
-                        <h3 class="fw-bold mb-0">Soundverse</h3>
-                        <p class="text-white-50 mb-0">Panel de Administración</p>
-                    </div>
-                    <div class="card-body p-4">
-                        <form id="form-login" method="POST">
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-secondary">Correo Electrónico</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light"><i
-                                            class="fas fa-envelope text-muted"></i></span>
-                                    <input type="email" id="loginEmail" name="correo" class="form-control"
-                                        placeholder="admin@soundverse.com" required>
+    <div class="page-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <div class="card login-card border-0">
+                        <div class="login-header">
+                            <i class="fas fa-compact-disc fa-3x mb-2 fa-spin" style="animation-duration: 3s;"></i>
+                            <h3 class="fw-bold mb-0">Soundverse</h3>
+                            <p class="text-white-50 mb-0">Panel de Administración</p>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="form-login" method="POST">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-secondary">Correo Electrónico</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i
+                                                class="fas fa-envelope text-muted"></i></span>
+                                        <input type="email" id="loginEmail" name="correo" class="form-control"
+                                            placeholder="admin@soundverse.com" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label fw-bold text-secondary">Contraseña</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light"><i
-                                            class="fas fa-lock text-muted"></i></span>
-                                    <input type="password" id="loginPassword" name="clave" class="form-control"
-                                        placeholder="********" required>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-secondary">Contraseña</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i
+                                                class="fas fa-lock text-muted"></i></span>
+                                        <input type="password" id="loginPassword" name="clave" class="form-control"
+                                            placeholder="********" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg fw-bold">
-                                    Iniciar Sesión <i class="fas fa-sign-in-alt ms-2"></i>
-                                </button>
-                            </div>
-                        </form>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg fw-bold">
+                                        Iniciar Sesión <i class="fas fa-sign-in-alt ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
