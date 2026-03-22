@@ -75,6 +75,11 @@ if (isset($_SESSION['usuario_id'])) {
     </div>
 </div>
 
+<<<<<<< HEAD
+<script src="../js/funciones.js"></script>
+<script>
+    configurarLogin();
+=======
 <script>
 // Lógica temporal para conectar con nuestro backend
 document.getElementById('formLogin').addEventListener('submit', function(e) {
@@ -105,6 +110,7 @@ document.getElementById('formLogin').addEventListener('submit', function(e) {
         Swal.fire('Error', 'No se pudo conectar con el servidor.', 'error');
     });
 });
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
 </script>
 </body>
 </html>

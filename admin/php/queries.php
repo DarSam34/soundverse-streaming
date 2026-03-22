@@ -4,11 +4,21 @@
  * PROPÓSITO: Procesar registros con la estructura exacta y validación de llaves foráneas.
  */
 
+<<<<<<< HEAD
+session_start(); // Necesario al inicio para poder leer y escribir variables de sesión
+header('Content-Type: application/json');
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+
+$ruta_conexion = dirname(__DIR__, 2) . '/classes/conexion.php';
+$ruta_usuario = dirname(__DIR__, 2) . '/classes/Usuario.php';
+=======
 header('Content-Type: application/json');
 error_reporting(E_ALL); 
 ini_set('display_errors', 0); 
 
 $ruta_conexion = dirname(__DIR__, 2) . "/classes/conexion.php";
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
 
 if (!file_exists($ruta_conexion)) {
     echo json_encode(['status' => 'error', 'message' => 'Falta el archivo de conexión.']);
@@ -16,6 +26,10 @@ if (!file_exists($ruta_conexion)) {
 }
 
 require_once $ruta_conexion;
+<<<<<<< HEAD
+require_once $ruta_usuario;
+=======
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
 
 $database = new Conexion();
 $db = $database->conectar();
@@ -26,6 +40,106 @@ if (!$db) {
 }
 
 if (isset($_POST['accion']) && $_POST['accion'] === 'registrarUsuario') {
+<<<<<<< HEAD
+
+    $nombre = trim($_POST['nombre'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $pass = $_POST['password'] ?? '';
+    $id_tipo = (isset($_POST['rol']) && $_POST['rol'] == 2) ? 2 : 1;
+
+    // Capa servidor: contraseña obligatoria y debe tener mínimo 8 caracteres
+    if (strlen($pass) < 8) {
+        echo json_encode(['status' => 'error', 'message' => 'La contraseña debe tener al menos 8 caracteres por seguridad.']);
+        exit;
+    }
+
+    $usuarioObj = new Usuario();
+
+    // Validar que el correo no esté ya registrado
+    if ($usuarioObj->verificarCorreoExistente($email)) {
+        echo json_encode(['status' => 'error', 'message' => 'Este correo ya está registrado en el sistema.']);
+    } else {
+        // El hash se genera dentro del modelo (guardarUsuario)
+        $usuarioObj = new Usuario();
+        $resultado = $usuarioObj->guardarUsuario($id_tipo, $nombre, $email, $pass);
+
+        if ($resultado) {
+            echo json_encode(['status' => 'success', 'message' => '¡Éxito! ' . htmlspecialchars($nombre) . ' se registró en Soundverse.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'No se pudo guardar el usuario. Intente de nuevo.']);
+        }
+    }
+
+    // =========================================================================
+// BLOQUE: ELIMINAR USUARIO (Borrado Lógico)
+// =========================================================================
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'eliminarUsuario') {
+
+    $id_usuario = (int) ($_POST['id_usuario'] ?? 0);
+
+    $usuarioObj = new Usuario();
+    $resultado = $usuarioObj->eliminarUsuarioLogico($id_usuario);
+
+    if ($resultado) {
+        echo json_encode(['status' => 'success', 'message' => 'El usuario fue dado de baja del sistema (Borrado lógico).']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'No se pudo dar de baja al usuario. Verifique que exista y esté activo.']);
+    }
+
+    // =========================================================================
+// BLOQUE: INICIAR SESIÓN (LOGIN)
+// =========================================================================
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'iniciarSesion') {
+
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    $usuarioObj = new Usuario();
+    $usuario = $usuarioObj->login($email, $password);
+
+    if ($usuario !== false) {
+        // Credenciales correctas: registrar variables de sesión
+        $_SESSION['usuario_id'] = $usuario['PK_id_usuario'];
+        $_SESSION['nombre'] = $usuario['nombre_completo'];
+
+        echo json_encode(['status' => 'success', 'message' => 'Acceso concedido.']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Correo o contraseña incorrectos.']);
+    }
+
+    // =========================================================================
+// BLOQUE: LISTAR USUARIOS
+// =========================================================================
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'listar_usuarios') {
+    $usuarioObj = new Usuario();
+    echo json_encode($usuarioObj->listarUsuarios());
+
+    // =========================================================================
+// BLOQUE: ACTUALIZAR USUARIO
+// =========================================================================
+} elseif (isset($_POST['accion']) && $_POST['accion'] === 'actualizarUsuario') {
+    $id_usuario = (int) ($_POST['id_usuario'] ?? 0);
+    $nombre = trim($_POST['nombre'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $pass = $_POST['password'] ?? '';
+    $id_tipo = (isset($_POST['rol']) && $_POST['rol'] == 2) ? 2 : 1;
+    // Si viene contraseña nueva, validar que tenga mínimo 8 caracteres
+    if (!empty($pass) && strlen($pass) < 8) {
+        echo json_encode(['status' => 'error', 'message' => 'La nueva contraseña debe tener al menos 8 caracteres.']);
+        exit;
+    }
+
+    $usuarioObj = new Usuario();
+    $resultado = $usuarioObj->actualizarUsuario($id_usuario, $id_tipo, $nombre, $email, $pass);
+
+    if ($resultado) {
+        echo json_encode(['status' => 'success', 'message' => 'Usuario actualizado correctamente.']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error al actualizar el usuario.']);
+    }
+
+    // =========================================================================
+=======
     
     $nombre = $_POST['nombre'] ?? '';
     $email  = $_POST['email'] ?? '';
@@ -127,6 +241,7 @@ if (isset($_POST['accion']) && $_POST['accion'] === 'registrarUsuario') {
     }
 
 // =========================================================================
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
 // BLOQUE: CATÁLOGO MUSICAL (CANCIONES)
 // =========================================================================
 } elseif (isset($_POST['accion']) && $_POST['accion'] === 'listar_canciones') {
@@ -145,7 +260,11 @@ if (isset($_POST['accion']) && $_POST['accion'] === 'registrarUsuario') {
 } elseif (isset($_POST['accion']) && $_POST['accion'] === 'guardar_cancion') {
     require_once dirname(__DIR__, 2) . "/classes/Cancion.php";
     $cancionObj = new Cancion();
+<<<<<<< HEAD
+
+=======
     
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
     $id = $_POST['id_cancion'] ?? '';
     $album = $_POST['album'] ?? '';
     $genero = $_POST['genero'] ?? '';
@@ -176,7 +295,11 @@ if (isset($_POST['accion']) && $_POST['accion'] === 'registrarUsuario') {
     // Recuerda que aquí usamos borrado lógico
     echo json_encode(['status' => $res ? 'success' : 'error', 'message' => $res ? 'La canción fue dada de baja (Borrado lógico).' : 'Error al eliminar la canción.']);
 
+<<<<<<< HEAD
+    // =========================================================================
+=======
 // =========================================================================
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
 // ACCIÓN DESCONOCIDA
 // =========================================================================
 } else {

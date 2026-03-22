@@ -69,13 +69,46 @@ function cargarVista(urlVista) {
 
 /**
  * Función: configurarFormularioUsuarios
+<<<<<<< HEAD
+ * Maneja el formulario en modo CREAR y EDITAR.
+ * Detecta el modo según el campo oculto #id_usuario (0 = nuevo, >0 = editar).
+=======
  * Captura los datos del formulario de usuarios y los envía a queries.php vía POST.
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
  */
 function configurarFormularioUsuarios() {
     const form = document.getElementById('formNuevoUsuario');
     if (!form) return;
 
     form.addEventListener('submit', function(e) {
+<<<<<<< HEAD
+        e.preventDefault();
+
+        const id      = document.getElementById('id_usuario').value;
+        const esEditar = id && parseInt(id) > 0;
+
+        const password = document.getElementById('password').value;
+
+        // Validar contraseña según modo
+        if (!esEditar && password === '') {
+            Swal.fire({ icon: 'warning', title: 'Campo requerido', text: 'Debes ingresar una contraseña para registrar un usuario.', confirmButtonColor: '#0d6efd' });
+            return;
+        }
+        if (password !== '' && password.length < 8) {
+            Swal.fire({ icon: 'warning', title: 'Contraseña insegura', text: 'La contraseña debe tener un mínimo de 8 caracteres.', confirmButtonColor: '#0d6efd' });
+            return;
+        }
+
+        const datos = new FormData();
+        datos.append('accion',     esEditar ? 'actualizarUsuario' : 'registrarUsuario');
+        datos.append('id_usuario', id);
+        datos.append('nombre',     document.getElementById('nombre').value);
+        datos.append('email',      document.getElementById('email').value);
+        datos.append('rol',        document.getElementById('rol').value);
+        datos.append('password',   password);
+
+        fetch('php/queries.php', { method: 'POST', body: datos })
+=======
         e.preventDefault(); // Evitar recarga de página
 
         const datos = new FormData();
@@ -89,28 +122,75 @@ function configurarFormularioUsuarios() {
             method: 'POST',
             body: datos
         })
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
                 Swal.fire({
                     icon: 'success',
+<<<<<<< HEAD
+                    title: esEditar ? '¡Actualizado!' : '¡Registro Exitoso!',
+                    text: data.message,
+                    confirmButtonColor: '#0d6efd'
+                });
+                cancelarEdicionUsuario(); // Limpia el form y resetea modo
+                cargarVista('vistas/usuarios.php');
+=======
                     title: '¡Registro Exitoso!',
                     text: data.message,
                     confirmButtonColor: '#0d6efd'
                 });
                 form.reset(); // Limpiar campos
                 cargarVista('vistas/usuarios.php'); // Recargar la tabla para ver el nuevo registro
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
             } else {
                 Swal.fire('Error', data.message, 'error');
             }
         })
         .catch(error => {
             console.error('Error:', error);
+<<<<<<< HEAD
+            Swal.fire('Error Crítico', 'No se pudo procesar la solicitud.', 'error');
+=======
             Swal.fire('Error Crítico', 'No se pudo procesar el registro.', 'error');
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
         });
     });
 }
 
+<<<<<<< HEAD
+// Prellenar el formulario con los datos del usuario seleccionado (modo editar)
+window.editarUsuario = function(id, nombre, email, rol) {
+    document.getElementById('id_usuario').value = id;
+    document.getElementById('nombre').value      = nombre;
+    document.getElementById('email').value       = email;
+    document.getElementById('rol').value         = rol;
+    document.getElementById('password').value    = ''; // No se muestra el hash; vacío = no cambiar
+
+    // Cambiar el botón a modo editar
+    const btn = document.getElementById('btn-submit-usuario');
+    btn.classList.replace('btn-primary', 'btn-warning');
+    btn.innerHTML = '<i class="fas fa-save me-2"></i>Actualizar Usuario';
+
+    // Mostrar botón cancelar y hacer scroll al formulario
+    document.getElementById('btn-cancelar-usuario').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// Resetear el formulario a modo crear
+window.cancelarEdicionUsuario = function() {
+    document.getElementById('formNuevoUsuario').reset();
+    document.getElementById('id_usuario').value = '0';
+
+    const btn = document.getElementById('btn-submit-usuario');
+    btn.classList.replace('btn-warning', 'btn-primary');
+    btn.innerHTML = '<i class="fas fa-save me-2"></i>Registrar Usuario';
+
+    document.getElementById('btn-cancelar-usuario').style.display = 'none';
+};
+
+=======
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
 // Función para eliminar un usuario con SweetAlert2
 function eliminarUsuario(id, nombre) {
     Swal.fire({
@@ -300,4 +380,50 @@ window.limpiarFormCancion = function() {
     btn.classList.remove('btn-warning');
     btn.classList.add('btn-primary');
     btn.innerText = 'Guardar';
+<<<<<<< HEAD
 };
+// =========================================================================
+// BLOQUE: LOGIN (Inicio de Sesin)
+// =========================================================================
+
+/**
+ * Funcion: configurarLogin
+ * Captura el formulario de login y lo envia a queries.php va Fetch API.
+ * Se llama desde admin/index.php al cargar la pgina.
+ */
+function configurarLogin() {
+    const form = document.getElementById('formLogin');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email    = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        let datos = new FormData();
+        datos.append('accion', 'iniciarSesion');
+        datos.append('email', email);
+        datos.append('password', password);
+
+        fetch('php/queries.php', {
+            method: 'POST',
+            body: datos
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = 'menu_principal.php';
+            } else {
+                Swal.fire('Acceso Denegado', data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire('Error', 'No se pudo conectar con el servidor.', 'error');
+        });
+    });
+}
+=======
+};
+>>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
