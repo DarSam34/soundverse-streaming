@@ -19,7 +19,7 @@
  * @version 1.0
  */
 
-require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/Conexion.php';
 
 class Usuario
 {

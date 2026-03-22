@@ -2,7 +2,7 @@
 // =========================================================================
 // [MODIFICACIÓN]: Conexión a BD y Consultas Dinámicas para el Dashboard
 // =========================================================================
-$ruta_conexion = dirname(__DIR__, 2) . "/classes/conexion.php";
+$ruta_conexion = dirname(__DIR__, 2) . "/classes/Conexion.php";
 require_once $ruta_conexion;
 
 $database = new Conexion();
@@ -17,19 +17,22 @@ if ($db) {
     try {
         $resUsers = $db->query("SELECT COUNT(*) as total FROM Usuario")->fetch(PDO::FETCH_ASSOC);
         $totalUsuarios = $resUsers['total'];
-    } catch (Exception $e) {}
+    } catch (Exception $e) {
+    }
 
     // 2. Contar Canciones (Protegido por si la tabla Cancion aún no existe)
     try {
         $resSongs = $db->query("SELECT COUNT(*) as total FROM Cancion")->fetch(PDO::FETCH_ASSOC);
         $totalCanciones = $resSongs['total'];
-    } catch (Exception $e) {}
+    } catch (Exception $e) {
+    }
 
     // 3. Contar Suscripciones Pro (Usuarios Premium, asumiendo que el ID 2 es Premium)
     try {
         $resPro = $db->query("SELECT COUNT(*) as total FROM Usuario WHERE FK_id_tipo = 2")->fetch(PDO::FETCH_ASSOC);
         $totalPro = $resPro['total'];
-    } catch (Exception $e) {}
+    } catch (Exception $e) {
+    }
 }
 // =========================================================================
 ?>
