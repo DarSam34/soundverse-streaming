@@ -12,9 +12,8 @@
  * 3. Preparación de validación de sesión para seguridad.
  */
 
-// =========================================================================
 // BLOQUE DE SEGURIDAD
-// =========================================================================
+
 session_start();
 
 // Si no hay una sesión activa, expulsar al index (Login)

@@ -1,7 +1,5 @@
 <?php
-// =========================================================================
-// [MODIFICACIÓN]: Conexión a BD y Consultas Dinámicas para el Dashboard
-// =========================================================================
+// Conexión a BD y Consultas Dinámicas para el Dashboard
 $ruta_conexion = dirname(__DIR__, 2) . "/classes/Conexion.php";
 require_once $ruta_conexion;
 
@@ -34,7 +32,7 @@ if ($db) {
     } catch (Exception $e) {
     }
 }
-// =========================================================================
+
 ?>
 
 <div class="container-fluid">

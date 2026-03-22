@@ -92,9 +92,7 @@ switch ($caso) {
         break;
 }
 
-// =========================================================================
 // DEFINICIÓN DE FUNCIONES PARA EL CONTROLADOR
-// =========================================================================
 
 function verificarSesionAjax()
 {
@@ -199,7 +197,7 @@ function listarUsuarios()
     echo json_encode($usuarioObj->listarUsuarios());
 }
 
-// ========================== MÓDULO CANCIONES ==========================
+// MÓDULO CANCIONES
 
 function listarCanciones()
 {

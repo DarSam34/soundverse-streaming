@@ -7,9 +7,7 @@
  * Este archivo se carga dinámicamente en el 'contenedor-vistas' del menu_principal.php.
  */
 
-// =========================================================================
-// [MODIFICACIÓN]: Conexión a BD y Consulta SQL
-// =========================================================================
+// Conexión a BD y Consulta SQL
 $ruta_conexion = dirname(__DIR__, 2) . "/classes/Conexion.php";
 require_once $ruta_conexion;
 
@@ -26,7 +24,7 @@ $sql = "SELECT u.PK_id_usuario, u.nombre_completo, u.correo, t.nombre_plan
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $lista_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// =========================================================================
+
 ?>
 
 <div class="container-fluid animate__animated animate__fadeIn">

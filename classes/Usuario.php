@@ -1,22 +1,15 @@
 <?php
 /**
  * CLASE: Usuario
- *
  * PROPÓSITO:
  * Gestionar todas las operaciones de base de datos relacionadas con los
  * usuarios de la plataforma Soundverse (login, registro, borrado lógico).
- *
  * PATRÓN: MVC - Capa Modelo
- *
- * REGLAS DE ORO APLICADAS:
  * 1. El constructor instancia la conexión PDO a través de la clase Conexion.
  * 2. Método privado logError() registra excepciones en logs/errores.log.
  * 3. Todas las consultas usan try-catch capturando PDOException.
  * 4. Borrado LÓGICO (UPDATE estado_disponible = 0) — DELETE está prohibido.
  * 5. La conexión se destruye al final de cada método público ($this->db = null).
- *
- * @author Equipo Proyecto 6 - Programación Avanzada
- * @version 1.0
  */
 
 require_once __DIR__ . '/Conexion.php';
@@ -27,9 +20,7 @@ class Usuario
     /** @var PDO|null Objeto de conexión a la base de datos */
     private $db;
 
-    // =========================================================================
     // CONSTRUCTOR
-    // =========================================================================
 
     /**
      * Establece la conexión a la base de datos al instanciar la clase.
@@ -39,9 +30,7 @@ class Usuario
         $this->db = (new Conexion())->conectar();
     }
 
-    // =========================================================================
     // MÉTODO PRIVADO: logError
-    // =========================================================================
 
     /**
      * Registra un mensaje de error en el archivo de log del sistema.
@@ -56,9 +45,7 @@ class Usuario
         file_put_contents($log_file, $entrada, FILE_APPEND);
     }
 
-    // =========================================================================
     // MÉTODO PÚBLICO: verificarCorreoExistente
-    // =========================================================================
 
     /**
      * Comprueba si un correo electrónico ya está registrado en la BD.
@@ -85,9 +72,7 @@ class Usuario
         }
     }
 
-    // =========================================================================
     // MÉTODO PÚBLICO: guardarUsuario
-    // =========================================================================
 
     /**
      * Registra un nuevo usuario en la BD con la contraseña encriptada.
@@ -125,9 +110,7 @@ class Usuario
         }
     }
 
-    // =========================================================================
     // MÉTODO PÚBLICO: eliminarUsuarioLogico
-    // =========================================================================
 
     /**
      * Desactiva un usuario cambiando su campo estado_disponible a 0.
@@ -157,9 +140,7 @@ class Usuario
         }
     }
 
-    // =========================================================================
     // MÉTODO PÚBLICO: login
-    // =========================================================================
 
     /**
      * Valida las credenciales del usuario contra la base de datos.
@@ -201,9 +182,7 @@ class Usuario
         }
     }
 
-    // =========================================================================
     // MÉTODO PÚBLICO: listarUsuarios
-    // =========================================================================
 
     /**
      * Retorna todos los usuarios activos con su tipo de suscripción.
@@ -233,9 +212,7 @@ class Usuario
         }
     }
 
-    // =========================================================================
     // MÉTODO PÚBLICO: actualizarUsuario
-    // =========================================================================
 
     /**
      * Actualiza los datos de un usuario existente.
