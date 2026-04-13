@@ -4,3 +4,53 @@
 [2026-03-21 21:18:09] Error de conexión: SQLSTATE[HY000] [2002] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión en C:\xampp\htdocs\soundverse-streaming\classes\conexion.php línea 42
 [2026-03-21 21:18:39] Error de conexión: SQLSTATE[HY000] [2002] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión en C:\xampp\htdocs\soundverse-streaming\classes\conexion.php línea 42
 [2026-03-21 21:20:02] Error de conexión: SQLSTATE[HY000] [2002] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión en C:\xampp\htdocs\soundverse-streaming\classes\conexion.php línea 42
+[2026-04-11 07:18:22] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:18:30] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:20:14] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:06] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:10] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:11] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:16] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:22] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:22] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:23] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:25] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:29] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:30] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:38] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:41] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:44] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:52] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:21:54] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:17] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:18] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:18] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:18] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:19] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:19] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:22] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:30] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:31] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:31] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:31] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:32] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:22:55] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:23:00] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:23:05] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:23:08] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:23:10] [Album] listarAlbumes(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.discografica' in 'field list'
+[2026-04-11 07:23:51] [Album] registrarAlbum(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'discografica' in 'field list'
+[2026-04-11 07:24:02] [Album] registrarAlbum(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'discografica' in 'field list'
+[2026-04-11 07:24:13] [Album] registrarAlbum(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'discografica' in 'field list'
+[2026-04-11 07:26:49] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 07:26:52] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 07:46:21] Error de conexión: SQLSTATE[HY000] [2002] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 07:46:24] Error de conexión: SQLSTATE[HY000] [2002] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 07:46:28] Error de conexión: SQLSTATE[HY000] [2002] No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 08:34:04] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 08:35:18] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 08:35:24] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 08:35:26] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-11 23:23:16] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-13 06:17:32] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39
+[2026-04-13 06:17:34] Error de conexión: SQLSTATE[HY000] [1049] Unknown database 'lp3_streaming_musica' en C:\xampp\htdocs\soundverse-streaming\classes\Conexion.php línea 39

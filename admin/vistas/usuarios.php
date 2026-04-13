@@ -1,134 +1,68 @@
-<?php
-/**
- * ARCHIVO: admin/vistas/usuarios.php
- * AUTOR: Mario Roger Mejía Elvir - Equipo Proyecto 6
- * PROPÓSITO: 
- * Proporcionar la interfaz de mantenimiento para la gestión de usuarios.
- * Este archivo se carga dinámicamente en el 'contenedor-vistas' del menu_principal.php.
- */
+<!-- 
+    NOTA: Este fragmento NO contiene PHP ni SQL.
+    Los datos se cargan vía AJAX desde queries.php?caso=listarUsuarios
 
-// =========================================================================
-// [MODIFICACIÓN]: Conexión a BD y Consulta SQL
-// =========================================================================
-$ruta_conexion = dirname(__DIR__, 2) . "/classes/conexion.php";
-require_once $ruta_conexion;
-
-$database = new Conexion();
-$db = $database->conectar();
-
-// Traemos los usuarios unidos a su tipo de suscripción
-$sql = "SELECT u.PK_id_usuario, u.nombre_completo, u.correo, t.nombre_plan 
-        FROM Usuario u 
-<<<<<<< HEAD
-        INNER JOIN Tipo_Suscripcion t ON u.FK_id_tipo = t.PK_id_tipo
-        WHERE u.estado_disponible = 1
-        ORDER BY u.PK_id_usuario DESC";
-
-=======
-        INNER JOIN Tipo_Suscripcion t ON u.FK_id_tipo = t.PK_id_tipo 
-        ORDER BY u.PK_id_usuario DESC";
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
-$stmt = $db->prepare($sql);
-$stmt->execute();
-$lista_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// =========================================================================
-?>
+-->
 
 <div class="container-fluid animate__animated animate__fadeIn">
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
     <div class="row mb-4">
         <div class="col-12">
-            <h2 class="fw-bold"><i class="fas fa-users-cog me-2 text-primary"></i> Administración de Usuarios</h2>
-            <p class="text-muted">Módulo para el registro, edición y control de acceso de la plataforma Soundverse.</p>
+            <h2 class="fw-bold"><i class="fas fa-users-cog me-2 text-primary"></i> <span data-key="adm_usr_titulo">Administración de Usuarios</span></h2>
+            <p class="text-muted" data-key="adm_usr_subtitulo">Módulo para el registro, edición y control de acceso de la plataforma Soundverse.</p>
             <hr>
         </div>
     </div>
 
     <div class="row">
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
         <div class="col-lg-4 mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white py-3">
-                    <h5 class="card-title mb-0"><i class="fas fa-user-plus me-2"></i> Nuevo Registro</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-user-plus me-2"></i> <span data-key="adm_usr_nuevo">Nuevo Registro</span></h5>
                 </div>
-<<<<<<< HEAD
 
                 <div class="card-body">
                     <form id="formNuevoUsuario">
                         <input type="hidden" id="id_usuario" value="0">
-=======
-                
-                <div class="card-body">
-                    <form id="formNuevoUsuario">
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nombre Completo</label>
+                            <label class="form-label fw-bold" data-key="registro_nombre">Nombre Completo</label>
                             <input type="text" id="nombre" class="form-control" placeholder="Ej. Mario Mejía" required>
                         </div>
-<<<<<<< HEAD
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Correo Electrónico</label>
+                            <label class="form-label fw-bold" data-key="login_correo">Correo Electrónico</label>
                             <input type="email" id="email" class="form-control" placeholder="mario@example.com"
                                 required>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Tipo de Suscripción</label>
+                            <label class="form-label fw-bold" data-key="adm_usr_tipo">Tipo de Suscripción</label>
                             <select id="rol" class="form-select">
                                 <option value="1">Free</option>
                                 <option value="2">Premium</option>
                             </select>
                         </div>
 
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="es_admin">
+                            <label class="form-check-label fw-bold" for="es_admin" data-key="adm_usr_admin">Otorgar privilegios de Administrador</label>
+                        </div>
+
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Contraseña Temporal</label>
+                            <label class="form-label fw-bold" data-key="adm_usr_pass">Contraseña Temporal</label>
                             <input type="password" id="password" class="form-control" minlength="8">
-                            <div class="form-text">Mínimo 8 caracteres. En edición, déjalo vacío para no cambiar la
+                            <div class="form-text" data-key="adm_usr_pass_hint">Mínimo 8 caracteres. En edición, déjalo vacío para no cambiar la
                                 clave.</div>
                         </div>
 
                         <div class="d-grid gap-2">
                             <button type="submit" id="btn-submit-usuario" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Registrar Usuario
+                                <i class="fas fa-save me-2"></i><span data-key="adm_usr_registrar">Registrar Usuario</span>
                             </button>
                             <button type="button" id="btn-cancelar-usuario" class="btn btn-outline-secondary"
                                 style="display:none;" onclick="cancelarEdicionUsuario()">
-                                <i class="fas fa-times me-2"></i>Cancelar Edición
-=======
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Correo Electrónico</label>
-                            <input type="email" id="email" class="form-control" placeholder="mario@example.com" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Rol de Usuario</label>
-                            <select id="rol" class="form-select">
-                                <option value="1">Administrador</option>
-                                <option value="2">Editor (Sube música)</option>
-                                <option value="3" selected>Cliente (Oyente)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Contraseña Temporal</label>
-                            <input type="password" id="password" class="form-control" required>
-                            <div class="form-text">Mínimo 8 caracteres.</div>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i> Registrar Usuario
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
+                                <i class="fas fa-times me-2"></i><span data-key="adm_usr_cancelar">Cancelar Edición</span>
                             </button>
                         </div>
                     </form>
@@ -139,103 +73,36 @@ $lista_usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="col-lg-8">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-<<<<<<< HEAD
-                    <h5 class="card-title mb-0 text-dark"><i class="fas fa-list me-2 text-success"></i> Lista de
-                        Usuarios</h5>
-                    <span class="badge bg-secondary">Total: <?php echo count($lista_usuarios); ?></span>
+                    <h5 class="card-title mb-0 text-dark"><i class="fas fa-list me-2 text-success"></i> <span data-key="adm_usr_lista">Lista de Usuarios</span></h5>
+                    <span class="badge bg-secondary" id="badge-total-usuarios">Total: 0</span>
                 </div>
 
-=======
-                    <h5 class="card-title mb-0 text-dark"><i class="fas fa-list me-2 text-success"></i> Lista de Usuarios</h5>
-                    <span class="badge bg-secondary">Total: <?php echo count($lista_usuarios); ?></span>
-                </div>
-                
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th>ID</th>
-                                    <th>Usuario</th>
-                                    <th>Correo</th>
-                                    <th>Plan</th>
-                                    <th class="text-center">Acciones</th>
+                                    <th data-key="adm_usr_th_usuario">Usuario</th>
+                                    <th data-key="adm_usr_th_correo">Correo</th>
+                                    <th data-key="adm_usr_th_plan">Plan</th>
+                                    <th class="text-center" data-key="adm_usr_th_acciones">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaUsuariosBody">
-<<<<<<< HEAD
-                                <?php if (count($lista_usuarios) > 0): ?>
-                                    <?php foreach ($lista_usuarios as $user): ?>
-=======
-                                <?php if(count($lista_usuarios) > 0): ?>
-                                    <?php foreach($lista_usuarios as $user): ?>
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
-                                        <tr>
-                                            <td><?php echo $user['PK_id_usuario']; ?></td>
-                                            <td><strong><?php echo htmlspecialchars($user['nombre_completo']); ?></strong></td>
-                                            <td><?php echo htmlspecialchars($user['correo']); ?></td>
-                                            <td>
-<<<<<<< HEAD
-                                                <?php if ($user['nombre_plan'] == 'Premium'): ?>
-                                                    <span class="badge bg-warning text-dark"><i class="fas fa-star"></i>
-                                                        Premium</span>
-                                                <?php else: ?>
-                                                    <span
-                                                        class="badge bg-info text-dark"><?php echo htmlspecialchars($user['nombre_plan']); ?></span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <button title="Editar" class="btn btn-outline-warning btn-sm me-1" onclick="editarUsuario(
-                                                        <?php echo $user['PK_id_usuario']; ?>,
-                                                        '<?php echo addslashes(htmlspecialchars($user['nombre_completo'])); ?>',
-                                                        '<?php echo addslashes(htmlspecialchars($user['correo'])); ?>',
-                                                        <?php echo ($user['nombre_plan'] === 'Premium') ? 2 : 1; ?>
-                                                    )">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button title="Eliminar" class="btn btn-outline-danger btn-sm"
-                                                    onclick="eliminarUsuario(<?php echo $user['PK_id_usuario']; ?>, '<?php echo htmlspecialchars($user['nombre_completo']); ?>')">
-=======
-                                                <?php if($user['nombre_plan'] == 'Premium'): ?>
-                                                    <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> Premium</span>
-                                                <?php else: ?>
-                                                    <span class="badge bg-info text-dark"><?php echo htmlspecialchars($user['nombre_plan']); ?></span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <button title="Editar" class="btn btn-outline-warning btn-sm me-1"><i class="fas fa-edit"></i></button>
-                                                <button title="Eliminar" class="btn btn-outline-danger btn-sm" onclick="eliminarUsuario(<?php echo $user['PK_id_usuario']; ?>, '<?php echo htmlspecialchars($user['nombre_completo']); ?>')">
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-<<<<<<< HEAD
-                                        <td colspan="5" class="text-center py-4 text-muted">No hay usuarios registrados.
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
+                            <tbody id="tabla-usuarios">
+                                <!-- La tabla se llena vía AJAX al cargar la vista -->
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                        <span class="ms-2 text-muted">Cargando usuarios...</span>
+                                    </td>
+                                </tr>
                             </tbody>
-=======
-                                        <td colspan="5" class="text-center py-4 text-muted">No hay usuarios registrados.</td>
-                                    </tr>
-                                <?php endif; ?>
-                                </tbody>
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
 
     </div>
-=======
-        
-    </div> 
->>>>>>> 5094ee0b09a9b22f47c1f31c8524dd2f3c5e88d5
 </div>

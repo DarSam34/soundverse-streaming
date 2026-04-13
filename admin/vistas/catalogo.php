@@ -1,81 +1,92 @@
-<div class="container-fluid mt-4 fade-in">
+<div class="container-fluid pt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-music text-primary me-2"></i> Catálogo Musical</h2>
-    </div>
-    
-    <div class="card mb-4 shadow-sm border-0">
-        <div class="card-header bg-primary text-white">
-            <h5 id="titulo-form-cancion" class="mb-0"><i class="fas fa-plus-circle me-1"></i> Registrar Nueva Canción</h5>
-        </div>
-        <div class="card-body bg-light">
-            <form id="form-cancion">
-                <input type="hidden" id="id_cancion" name="id_cancion" value="0">
-                <input type="hidden" name="accion" value="guardar_cancion">
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Título de la Canción *</label>
-                        <input type="text" class="form-control shadow-sm" id="titulo" name="titulo" placeholder="Ej: Yellow Submarine" required>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label fw-bold">Álbum *</label>
-                        <select class="form-select shadow-sm" id="album" name="album" required>
-                            <option value="">Seleccione...</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label fw-bold">Género *</label>
-                        <select class="form-select shadow-sm" id="genero" name="genero" required>
-                            <option value="">Seleccione...</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label fw-bold">Duración (segundos) *</label>
-                        <input type="number" class="form-control shadow-sm" id="duracion_segundos" name="duracion_segundos" placeholder="Ej: 245" required>
-                    </div>
-                    <div class="col-md-8 mb-3">
-                        <label class="form-label fw-bold">Ruta Archivo Audio *</label>
-                        <input type="text" class="form-control shadow-sm" id="ruta_archivo_audio" name="ruta_archivo_audio" placeholder="/assets/musica/tema.mp3" required>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 mb-3">
-                        <label class="form-label fw-bold">Letra Sincronizada (Opcional)</label>
-                        <textarea class="form-control shadow-sm" id="letra_sincronizada" name="letra_sincronizada" rows="3" placeholder="Introduce la letra aquí..."></textarea>
-                    </div>
-                </div>
-                
-                <div class="text-end mt-2">
-                    <button type="button" class="btn btn-secondary me-2 px-4" onclick="limpiarFormCancion()">
-                        <i class="fas fa-times"></i> Cancelar
-                    </button>
-                    <button type="submit" id="btn-submit-cancion" class="btn btn-primary px-4">
-                        <i class="fas fa-save"></i> Guardar
-                    </button>
-                </div>
-            </form>
-        </div>
+        <h2 data-key="adm_cat_titulo">Catálogo Musical</h2>
+        <button class="btn btn-primary" onclick="abrirModalCancion()">
+            <i class="fas fa-plus"></i> <span data-key="adm_cat_nueva">Nueva Canción</span>
+        </button>
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body table-responsive">
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Título</th>
-                        <th>Artista</th>
-                        <th>Álbum</th>
-                        <th>Género</th>
-                        <th>Duración</th>
-                        <th class="text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-canciones">
-                </tbody>
-            </table>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th data-key="adm_alb_th_titulo">Título</th>
+                            <th data-key="nav_artistas">Artista</th>
+                            <th data-key="nav_albumes">Álbum</th>
+                            <th data-key="adm_cat_th_genero">Género</th>
+                            <th data-key="adm_cat_th_duracion">Duración</th>
+                            <th class="text-center">Audio</th>
+                            <th class="text-center" data-key="adm_usr_th_acciones">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-canciones">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalCancion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="formularioCancion" onsubmit="guardarCancionForm(event)">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModalCancion">Registrar Nueva Canción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id_cancion" name="id_cancion" value="0">
+                    <input type="hidden" name="caso" value="guardar_cancion">
+                    
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label for="titulo" class="form-label">Título de la Canción <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" required>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <!-- NUEVO: Número de pista dentro del álbum -->
+                            <label for="numero_pista" class="form-label"># Pista</label>
+                            <input type="number" class="form-control" id="numero_pista" name="numero_pista"
+                                   min="1" max="999" value="1" title="Orden de la canción dentro del álbum">
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="duracion_segundos" class="form-label">Duración (seg) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="duracion_segundos" name="duracion_segundos" placeholder="Ej: 210" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
+                            <select class="form-select" id="genero" name="genero" required>
+                                </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="album" class="form-label">Álbum <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="album" name="album" list="lista-albumes" placeholder="Escriba el nombre exacto del álbum..." autocomplete="off" required>
+                            <datalist id="lista-albumes"></datalist>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="archivo_audio" class="form-label">Archivo de Audio (MP3/WAV) <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" id="archivo_audio" name="archivo_audio" accept="audio/*">
+                            <small class="text-muted">Si editas una canción, déjalo vacío para conservar el audio actual.</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="letra_sincronizada" class="form-label">Letra (Opcional)</label>
+                        <textarea class="form-control" id="letra_sincronizada" name="letra_sincronizada" rows="4" placeholder="[00:15.00] Primera línea de la canción..."></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-key="btn_cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-cancion" data-key="adm_cat_guardar">Guardar Canción</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

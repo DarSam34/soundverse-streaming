@@ -1,0 +1,5 @@
+[2026-04-01 02:26:13] [IP: ::1] listarGeneros(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'estado_disponible' in 'where clause'
+[2026-04-01 04:31:16] [IP: ::1] listarGeneros(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'estado_disponible' in 'where clause'
+[2026-04-01 19:27:34] [IP: ::1] listarGeneros(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'estado_disponible' in 'where clause'
+[2026-04-01 19:45:42] [IP: ::1] listarGeneros(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'estado_disponible' in 'where clause'
+[2026-04-01 20:04:35] [IP: ::1] listarGeneros(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'estado_disponible' in 'where clause'

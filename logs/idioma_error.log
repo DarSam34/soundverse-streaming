@@ -1,0 +1,2 @@
+[2026-03-31 23:00:48] [IP: Desconocida] inicializarTraducciones(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'codigo_idioma' in 'field list'
+[2026-03-31 23:13:46] [IP: Desconocida] cargarTraducciones(): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'clave_etiqueta' in 'field list'

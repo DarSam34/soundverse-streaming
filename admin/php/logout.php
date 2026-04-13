@@ -2,6 +2,7 @@
 /**
  * Destrucción segura de sesión
  */
+session_name('SOUNDVERSE_ADMIN');
 session_start();
 
 // Vaciar todas las variables de sesión
